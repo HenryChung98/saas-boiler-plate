@@ -15,7 +15,7 @@
 - Tanstack React Query + Devtools (npm install @tanstack/react-query @tanstack/react-query-devtools)
 - Supabase (npm install @supabase/supabase-js @supabase/ssr)
 - Drizzle (npm install drizzle-orm postgres, npm install -D drizzle-kit)
-- Stripe (npm install stripe)
+- Stripe (npm install stripe @stripe/stripe-js)
 
 ## Getting Started
 
@@ -41,12 +41,25 @@ GOOGLE_CLIENT_SECRET=
 DATABASE_URL=
 DATABASE_PASSWORD=
 
+# stripe
+STRIPE_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PRICE_BASIC=
+
 # etc
 NODE_ENV=development
 NEXT_PUBLIC_MAINTENANCE_MODE=false
 ```
 
-3. Push schema to database
+3. Create subscriptions table if needed and push schema to database
+
 ```bash
 npm run db:push
 ```
+
+4. Create stripe webhook endpoint in app/api/webhook/route.ts
+
+5. Implement stripe webhook handlers in app/api/webhooks/stripe/handlers
+
+6. Set up Stripe
