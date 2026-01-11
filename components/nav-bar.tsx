@@ -13,20 +13,38 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { User, LogOut, Moon, Sun, Monitor } from "lucide-react";
+import { User, LogOut, Moon, Sun, Monitor, ChevronDown } from "lucide-react";
 import { SignOutHandler } from "./sign-out-handler";
 import { useTheme } from "next-themes";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 
 export const NavBar = () => {
   const { user } = useAuth();
   const { theme, setTheme } = useTheme();
 
-  const navItems = [
-    { label: "Features", href: "/features" },
-    { label: "Pricing", href: "/pricing" },
-    { label: "Contact", href: "/contact" },
-    { label: "Docs", href: "/docs" },
-  ];
+  const navConfig = {
+    links: [
+      { label: "Features", href: "/features" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "Contact", href: "/contact" },
+      { label: "Docs", href: "/docs" },
+    ],
+    droppable: {
+      title: "droppable",
+      items: [
+        { label: "item1", href: "/item1" },
+        { label: "item2", href: "/item2" },
+      ],
+    },
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
@@ -45,16 +63,61 @@ export const NavBar = () => {
           </Link>
 
           {/* Center Navigation */}
-          <div className="hidden md:flex space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="text-muted-foreground hover:text-foreground transition-colors font-medium"
-              >
-                {item.label}
-              </Link>
-            ))}
+          <div className="hidden md:flex">
+            <NavigationMenu>
+              <NavigationMenuList>
+                {navConfig.links.map((item) => (
+                  <NavigationMenuItem key={item.label}>
+                    <NavigationMenuLink asChild>
+                      <Link href={item.href} className={navigationMenuTriggerStyle()}>
+                        {item.label}
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                ))}
+
+                {/* Navigation Dropdown Style Menu Item */}
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>{navConfig.droppable.title}</NavigationMenuTrigger>
+                  <NavigationMenuContent className="p-0">
+                    <ul className="grid w-[200px] gap-3 p-4">
+                      {navConfig.droppable.items.map((item) => (
+                        <li key={item.label}>
+                          <NavigationMenuLink asChild>
+                            <Link
+                              href={item.href}
+                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            >
+                              <div className="text-sm font-medium leading-none">{item.label}</div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+                {/* Dropdown Style Menu Item */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    className={
+                      navigationMenuTriggerStyle() + " cursor-pointer flex items-center gap-1"
+                    }
+                  >
+                    {navConfig.droppable.title}
+                    <ChevronDown className="h-4 w-4" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start">
+                    {navConfig.droppable.items.map((item) => (
+                      <DropdownMenuItem key={item.label} asChild>
+                        <Link href={item.href} className="cursor-pointer">
+                          {item.label}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </NavigationMenuList>
+            </NavigationMenu>
           </div>
 
           {/* Right Actions */}
