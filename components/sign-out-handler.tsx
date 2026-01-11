@@ -1,11 +1,10 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
 
 export const SignOutHandler = ({ className }: { className?: string }) => {
   const { supabase } = useAuth();
-  const router = useRouter();
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSignOut = async () => {
@@ -16,7 +15,7 @@ export const SignOutHandler = ({ className }: { className?: string }) => {
       if (error) {
         console.error("Sign out error:", error.message);
       } else {
-        router.push("/");
+        window.location.href = "/";
       }
     } catch (err) {
       console.error("signOut exception:", err);
